@@ -78,5 +78,3 @@ class _LoginState extends State<Login> {
     );
   }
 }
-
-class Colours {}
