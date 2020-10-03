@@ -1,4 +1,6 @@
+import 'package:chatApp/modal/database.dart';
 import 'package:chatApp/services/auth.dart';
+import 'package:chatApp/views/chatRoom.dart';
 import 'package:flutter/material.dart';
 import 'package:chatApp/widget/widget.dart';
 
@@ -10,6 +12,7 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   bool isLoading = false;
   AuthMethods authMethods = new AuthMethods();
+  Database database = new Database();
   final formKey = GlobalKey<FormState>();
   TextEditingController userNameTEC = new TextEditingController();
   TextEditingController emailTEC = new TextEditingController();
@@ -22,7 +25,15 @@ class _SignupState extends State<Signup> {
       });
       authMethods
           .signUpWithEmail(emailTEC.text, passwordTEC.text)
-          .then((value) => print(value));
+          .then((value) => {
+            database.uploadUserInfo(userMap);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(q
+                    builder: (context) => ChatRoom(),
+                  ),
+                )
+              });
     }
   }
 
