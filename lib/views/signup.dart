@@ -20,20 +20,24 @@ class _SignupState extends State<Signup> {
 
   singUp() async {
     if (formKey.currentState.validate()) {
+      Map<String, String> userInforMap = {
+        "name": userNameTEC.text,
+        "email": emailTEC.text
+      };
       setState(() {
         isLoading = true;
       });
       authMethods
           .signUpWithEmail(emailTEC.text, passwordTEC.text)
-          .then((value) => {
-            database.uploadUserInfo(userMap);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(q
-                    builder: (context) => ChatRoom(),
-                  ),
-                )
-              });
+          .then((value) {
+        database.uploadUserInfo(userInforMap);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatRoom(),
+          ),
+        );
+      });
     }
   }
 
