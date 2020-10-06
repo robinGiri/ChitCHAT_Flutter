@@ -19,9 +19,9 @@ class _AuthCheckerState extends State<AuthChecker> {
   @override
   Widget build(BuildContext context) {
     if (isLogIn) {
-      return Login();
+      return Login(toggleView);
     } else {
-      return Signup();
+      return Signup(toggleView);
     }
   }
 }

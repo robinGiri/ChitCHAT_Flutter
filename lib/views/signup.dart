@@ -1,3 +1,4 @@
+import 'package:chatApp/helper/helperFunction.dart';
 import 'package:chatApp/modal/database.dart';
 import 'package:chatApp/services/auth.dart';
 import 'package:chatApp/views/chatRoom.dart';
@@ -5,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:chatApp/widget/widget.dart';
 
 class Signup extends StatefulWidget {
+  final Function toggleView;
+  Signup(this.toggleView);
+
   @override
   _SignupState createState() => _SignupState();
 }
@@ -24,6 +28,10 @@ class _SignupState extends State<Signup> {
         "name": userNameTEC.text,
         "email": emailTEC.text
       };
+
+      HelperFunction.saveUserName(userNameTEC.text);
+      HelperFunction.saveEmail(userNameTEC.text);
+
       setState(() {
         isLoading = true;
       });
@@ -31,6 +39,7 @@ class _SignupState extends State<Signup> {
           .signUpWithEmail(emailTEC.text, passwordTEC.text)
           .then((value) {
         database.uploadUserInfo(userInforMap);
+        HelperFunction.saveLoggedInUser(true);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -142,12 +151,20 @@ class _SignupState extends State<Signup> {
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text("Already have an account ? ",
                           style: simpleTextStyle()),
-                      Text(
-                        ' Sign In Now',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            decoration: TextDecoration.underline),
+                      GestureDetector(
+                        onTap: () {
+                          widget.toggleView();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Text(
+                            ' Sign In Now',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                                decoration: TextDecoration.underline),
+                          ),
+                        ),
                       ),
                     ]),
                     SizedBox(height: 55),

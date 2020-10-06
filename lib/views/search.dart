@@ -22,6 +22,12 @@ class _SearchState extends State<Search> {
     });
   }
 
+  //   createChatRoomAndNavigation(String userName) {
+
+  //     List<String> chatRoomMap = [userName, ]
+  //   database.createChatRoom(chatRoomMap);
+  // }
+
   Widget searchList() {
     return searchSnapshot != null
         ? ListView.builder(
@@ -123,13 +129,5 @@ class SearchTiles extends StatelessWidget {
         ],
       ),
     );
-    // return ListTile(
-    //   leading: Icon(
-    //     Icons.person,
-    //     size: 100,
-    //   ),
-    //   title: Text(userName),
-    //   subtitle: Text(userEmail),
-    // );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:chatApp/views/signup.dart';
+import 'package:chatApp/helper/auth.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Signup(),
+      home: AuthChecker(),
     );
   }
 }
