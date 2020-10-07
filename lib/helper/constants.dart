@@ -1,3 +1,3 @@
 class Constants {
-  static String myHelper;
+  static String myName = "";
 }

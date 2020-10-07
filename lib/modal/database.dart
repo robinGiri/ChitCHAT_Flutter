@@ -21,13 +21,33 @@ class Database {
     });
   }
 
-  createChatRoom(String chatRoomId, chatRoomMap) {
+  Future<bool> addChatRoom(chatRoom, chatRoomId) {
     Firestore.instance
         .collection("chatRoom")
         .document(chatRoomId)
-        .setData(chatRoomMap)
+        .setData(chatRoom)
+        .catchError((e) {
+      print(e);
+    });
+  }
+
+  Future<void> addMessage(String chatRoomId, chatMessageData) {
+    Firestore.instance
+        .collection("chatRoom")
+        .document(chatRoomId)
+        .collection("chats")
+        .add(chatMessageData)
         .catchError((e) {
       print(e.toString());
     });
+  }
+
+  getChats(String chatRoomId) async {
+    return Firestore.instance
+        .collection("chatRoom")
+        .document(chatRoomId)
+        .collection("chats")
+        .orderBy('time')
+        .snapshots();
   }
 }
