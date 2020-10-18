@@ -1,5 +1,6 @@
 import 'package:chatApp/helper/helperFunction.dart';
-import 'package:chatApp/modal/database.dart';
+import 'package:chatApp/helper/thame.dart';
+import 'package:chatApp/services/database.dart';
 import 'package:chatApp/services/auth.dart';
 import 'package:chatApp/views/chatRoom.dart';
 import 'package:flutter/material.dart';
@@ -24,28 +25,28 @@ class _SignupState extends State<Signup> {
 
   singUp() async {
     if (formKey.currentState.validate()) {
-      Map<String, String> userInforMap = {
-        "name": userNameTEC.text,
-        "email": emailTEC.text
-      };
-
-      HelperFunction.saveUserName(userNameTEC.text);
-      HelperFunction.saveEmail(userNameTEC.text);
-
       setState(() {
         isLoading = true;
       });
-      authMethods
+
+      await authMethods
           .signUpWithEmail(emailTEC.text, passwordTEC.text)
-          .then((value) {
-        database.uploadUserInfo(userInforMap);
-        HelperFunction.saveLoggedInUser(true);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChatRoom(),
-          ),
-        );
+          .then((result) {
+        if (result != null) {
+          Map<String, String> userDataMap = {
+            "userName": userNameTEC.text,
+            "userEmail": emailTEC.text
+          };
+
+          database.uploadUserInfo(userDataMap);
+
+          HelperFunction.saveLoggedInUser(true);
+          HelperFunction.saveUserName(userNameTEC.text);
+          HelperFunction.saveEmail(emailTEC.text);
+
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => ChatRoom()));
+        }
       });
     }
   }
@@ -61,115 +62,110 @@ class _SignupState extends State<Signup> {
               ),
             )
           : Container(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Form(
-                      key: formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            validator: (val) {
-                              return val.isEmpty || val.length < 2
-                                  ? "Please Enter Your Name"
-                                  : null;
-                            },
-                            controller: userNameTEC,
-                            style: simpleTextStyle(),
-                            decoration: textFieldInputDecoration('User Name'),
-                          ),
-                          TextFormField(
-                            validator: (val) {
-                              Pattern pattern =
-                                  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                              RegExp regex = new RegExp(pattern);
-                              return regex.hasMatch(val)
-                                  ? null
-                                  : "Please Enter Valid Email";
-                            },
-                            controller: emailTEC,
-                            style: simpleTextStyle(),
-                            decoration: textFieldInputDecoration('Email'),
-                          ),
-                          TextFormField(
-                            obscureText: true,
-                            validator: (val) {
-                              return val.isEmpty || val.length < 6
-                                  ? "Please Enter Password Greater Than 6 Length"
-                                  : null;
-                            },
-                            controller: passwordTEC,
-                            style: simpleTextStyle(),
-                            decoration: textFieldInputDecoration('Password'),
-                          ),
-                        ],
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  Spacer(),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          style: simpleTextStyle(),
+                          controller: userNameTEC,
+                          validator: (val) {
+                            return val.isEmpty || val.length < 3
+                                ? "Enter Username 3+ characters"
+                                : null;
+                          },
+                          decoration: textFieldInputDecoration("username"),
+                        ),
+                        TextFormField(
+                          controller: emailTEC,
+                          style: simpleTextStyle(),
+                          validator: (val) {
+                            return RegExp(
+                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                    .hasMatch(val)
+                                ? null
+                                : "Enter correct email";
+                          },
+                          decoration: textFieldInputDecoration("email"),
+                        ),
+                        TextFormField(
+                          obscureText: true,
+                          style: simpleTextStyle(),
+                          decoration: textFieldInputDecoration("password"),
+                          controller: passwordTEC,
+                          validator: (val) {
+                            return val.length < 6
+                                ? "Please Enter Password Greater Than 6 Length"
+                                : null;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () {
+                      singUp();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color(0xff007EF4),
+                            const Color(0xff2A75BC)
+                          ],
+                        ),
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(
+                        "Sign Up",
+                        style: simpleTextStyle(),
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: Text('Forgot Password', style: simpleTextStyle()),
+                  ),
+                  SizedBox(height: 16),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.white),
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "Sign Up with Google",
+                      style:
+                          TextStyle(fontSize: 17, color: CustomTheme.textColor),
+                      textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 8),
+                  ),
+                  SizedBox(height: 8),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Text("Already have an account ? ",
+                        style: simpleTextStyle()),
                     GestureDetector(
                       onTap: () {
-                        singUp();
+                        widget.toggleView();
                       },
                       child: Container(
-                        alignment: Alignment.center,
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(colors: [
-                              const Color(0xff007ef4),
-                              const Color(0xff2A75BC)
-                            ]),
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Text('Sign Up', style: simpleTextStyle()),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Container(
-                      alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      decoration: BoxDecoration(
-                          color: Colors.white70,
-                          borderRadius: BorderRadius.circular(30)),
-                      child: Text(
-                        'Sign Up With Google',
-                        style: TextStyle(
-                          color: Colors.black,
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          ' Sign In Now',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              decoration: TextDecoration.underline),
                         ),
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text("Already have an account ? ",
-                          style: simpleTextStyle()),
-                      GestureDetector(
-                        onTap: () {
-                          widget.toggleView();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Text(
-                            ' Sign In Now',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ),
-                      ),
-                    ]),
-                    SizedBox(height: 55),
-                  ],
-                ),
+                  ]),
+                  SizedBox(height: 55),
+                ],
               ),
             ),
     );
