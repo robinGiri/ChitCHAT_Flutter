@@ -50,4 +50,30 @@ class Database {
         .orderBy('time')
         .snapshots();
   }
+
+  addConservationMessage(String chatRoomId, messageMap) {
+    Firestore.instance
+        .collection("chats")
+        .document(chatRoomId)
+        .collection("chats")
+        .add(messageMap)
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  getConservationMessage(String chatRoomId) {
+    Firestore.instance
+        .collection("chats")
+        .document(chatRoomId)
+        .collection("chats")
+        .snapshots();
+  }
+
+  getUserChats(String itIsMyName) async {
+    return await Firestore.instance
+        .collection("chatRoom")
+        .where('users', arrayContains: itIsMyName)
+        .snapshots();
+  }
 }

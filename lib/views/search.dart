@@ -1,5 +1,5 @@
 import 'package:chatApp/helper/constants.dart';
-import 'package:chatApp/modal/database.dart';
+import 'package:chatApp/services/database.dart';
 import 'package:chatApp/views/chat.dart';
 import 'package:chatApp/widget/widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -66,10 +66,9 @@ class _SearchState extends State<Search> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Chat(
-          chatRoomId: chatRoomId,
-        ),
-      ),
+          builder: (context) => Chat(
+                chatRoomId: chatRoomId,
+              )),
     );
   }
 
@@ -160,20 +159,23 @@ class _SearchState extends State<Search> {
                             initiateSearch();
                           },
                           child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: [
-                                      const Color(0x36FFFFFF),
-                                      const Color(0x0FFFFFFF)
-                                    ],
-                                    begin: FractionalOffset.topLeft,
-                                    end: FractionalOffset.bottomRight),
-                                borderRadius: BorderRadius.circular(40)),
-                            padding: EdgeInsets.all(12),
-                            child: Icon(Icons.search),
-                          ),
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: [
+                                        const Color(0x36FFFFFF),
+                                        const Color(0x0FFFFFFF)
+                                      ],
+                                      begin: FractionalOffset.topLeft,
+                                      end: FractionalOffset.bottomRight),
+                                  borderRadius: BorderRadius.circular(40)),
+                              padding: EdgeInsets.all(12),
+                              child: Image.asset(
+                                "assets/images/search_white.png",
+                                height: 25,
+                                width: 25,
+                              )),
                         )
                       ],
                     ),

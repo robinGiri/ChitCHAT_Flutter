@@ -1,5 +1,5 @@
 import 'package:chatApp/helper/constants.dart';
-import 'package:chatApp/modal/database.dart';
+import 'package:chatApp/services/database.dart';
 import 'package:chatApp/widget/widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
